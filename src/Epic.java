@@ -1,15 +1,19 @@
 import java.util.ArrayList;
 
 public class Epic extends Task {
+    Subtask subtask;
     public ArrayList<Integer> subtaskIds = new ArrayList<>();
-    public Epic (String description, String name, String status) {
-        super(description, name, status);
-    }
-    public Epic (int id, String description, String name, String status) {
-        super(id, description, name, status);
+
+    public Epic(String description, String name) {
+        super(description, name);
     }
 
-    public void addSubtaskId(int id){
-        subtaskIds.add(id);
+    public Epic(int id, String description, String name, String status, ArrayList<Integer> subtaskIds) {
+        super(id, description, name, status);
+        this.subtaskIds = subtaskIds;
+
+
     }
 }
+
+

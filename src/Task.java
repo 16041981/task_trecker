@@ -18,6 +18,11 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String description, String name) {
+        this.description = description;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

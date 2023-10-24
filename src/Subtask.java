@@ -5,6 +5,7 @@ public class Subtask extends Task {
         super(description, name, status);
         this.idEpic = idEpic;
     }
+
     @Override // переопределяем toString
     public String toString() {
         return "Subtask{" +
