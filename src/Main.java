@@ -1,14 +1,20 @@
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args){
         TaskManager taskManager = new TaskManager();
-        taskManager.addEpic(new Epic("111","151"));
-        taskManager.addSubtask(new Subtask("Собрать вещи", "Вещи", "NEW", 5));
-        taskManager.addSubtask(new Subtask("Убрать квартиру", "Уборка", "NEW", 5));
-        taskManager.addSubtask(new Subtask("Помыть кота", "Кот", "NEW", 2));
+        taskManager.addEpic(new Epic("Собратся в поездку","Путешествие"));
+        taskManager.addEpic(new Epic("Котовьи дела","Кот"));
+        taskManager.addSubtask(new Subtask("Собрать вещи", "Вещи", "NEW", 1));
+        taskManager.addSubtask(new Subtask("Купить продукты", "Продукты", "NEW", 1));
+        taskManager.addSubtask(new Subtask("Помыть кота", "Кот", "DONE", 2));
+        taskManager.addSubtask(new Subtask("Посушить кота", "Кот", "NEW", 3));
         taskManager.addTask(new Task("Купить продукты на неделю", "Покупка продуктов", "NEW"));
-        taskManager.updateTask(new Task(4,"Купить продукты на месяц", "Покупка продуктов", "NEW"));
-        System.out.println(new Subtask("Собрать вещи", "Вещи", "NEW", 5));
-
-
+        taskManager.updateTask(new Task(6,"Купить продукты", "Покупка продуктов", "IN_PROGRESS"));
+        System.out.println(taskManager.printTask(6));
+        taskManager.listSubtask();
+        taskManager.listSubtaskForEpik(1);
+        taskManager.removeSubtask(3);
+        taskManager.cleanTask();
     }
 }

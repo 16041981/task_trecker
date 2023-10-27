@@ -23,6 +23,16 @@ public class Task {
         this.name = name;
     }
 
+    public Task(int id, String description, String name) {
+        this.id = id;
+        this.description = description;
+        this.name = name;
+    }
+
+    public Task(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
