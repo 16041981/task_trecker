@@ -81,18 +81,27 @@ public class TaskManager {
     }
 
     public void removeSubtask(int id) {
+        int epicIdSab = 1;
+        for (Integer integer : subtaskHashMap.keySet()) {
+            Epic epic = epicHashMap.get(epicIdSab);
+            for (Integer subtaskId : epic.subtaskIds) {
+                if (subtaskId.equals(id)) {
+                    epic.removeSubtaskIds(epicIdSab);
+                }
+            }
+            epicIdSab ++;
+        }
         subtaskHashMap.remove(id);
     }
 
-    public void removeEpic(int id) {
-        //Subtask subtask = subtaskHashMap.keySet();
-        //for (Integer integer : epicHashMap.keySet()) {
-            //Subtask subtask = (Subtask) subtaskHashMap.keySet();
-           // if (id == subtask.idEpic){
-                //subtaskHashMap.remove(integer);
-            //}
-        //}
-        epicHashMap.remove(id);
+    public void removeEpic(int idEpic) {
+        for (int i = 1; i < 50; i++) {
+            Subtask subtask = subtaskHashMap.get(i);
+            if (subtask != null && subtask.idEpic == idEpic) {
+                subtaskHashMap.remove(i);
+            }
+        }
+        epicHashMap.remove(idEpic);
     }
 
     public String printTask(int id) {

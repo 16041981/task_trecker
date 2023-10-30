@@ -16,11 +16,11 @@ public class Main {
         taskManager.addSubtask(new Subtask("Посушить кота", "Кот", "NEW", 3));
         taskManager.addTask(new Task("Купить продукты на неделю", "Покупка продуктов", "NEW"));
         taskManager.updateTask(new Task(6,"Купить продукты", "Покупка продуктов", "IN_PROGRESS"));
-        //System.out.println(taskManager.printTask(6));
+        System.out.println(taskManager.printTask(6));
         //System.out.println(taskManager.listSubtask());
         //taskManager.listSubtaskForEpik(1);
-        taskManager.removeEpic(1);
-        taskManager.removeSubtask(3);
-        taskManager.cleanTask();
+        //taskManager.removeEpic(1);
+        taskManager.removeSubtask(4);
+        //taskManager.cleanTask();
     }
 }
