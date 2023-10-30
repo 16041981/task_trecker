@@ -1,3 +1,10 @@
+package Manager;
+
+
+import Tasks.Epic;
+import Tasks.Subtask;
+import Tasks.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,20 +19,20 @@ public class TaskManager {
     }
 
     public int addTask(Task task) {
-        task.setId(this.nextId);
+        task.setId(nextId);
         this.taskHashMap.put(task.getId(), task);
         ++this.nextId;
         return task.getId();
     }
 
     public int addSubtask(Subtask subtask) {
-        subtask.setId(this.nextId);
-        Epic epic = (Epic)this.epicHashMap.get(subtask.idEpic);
-        if (epic != null && epic.id == subtask.idEpic) {
-            epic.addSubtaskIds(subtask.id);
-            this.subtaskHashMap.put(subtask.getId(), subtask);
-            this.updateStatusEpic(subtask);
-            ++this.nextId;
+        subtask.setId(nextId);
+        Epic epic = epicHashMap.get(subtask.idEpic);
+        if (epic != null && epic.getId() == subtask.idEpic) {
+            epic.addSubtaskIds(subtask.getId());
+            subtaskHashMap.put(subtask.getId(), subtask);
+            updateStatusEpic(subtask);
+            ++nextId;
             return subtask.getId();
         } else {
             System.out.println("Создай Epic!");
@@ -34,14 +41,12 @@ public class TaskManager {
     }
 
     public int addEpic(Epic epic) {
-        epic.setId(this.nextId);
-        this.epicHashMap.put(epic.getId(), epic);
-        ++this.nextId;
+        epic.setId(nextId);
+        epicHashMap.put(epic.getId(), epic);
+        ++nextId;
         ArrayList<Integer> epicStatus = epic.getSubtaskIds();
-        if (epicStatus.isEmpty()) {
-        }
-
-        epic.setStatus("NEW");
+        if (epicStatus.isEmpty())
+            epic.setStatus("NEW");
         return epic.getId();
     }
 
@@ -80,46 +85,42 @@ public class TaskManager {
     }
 
     public void removeEpic(int id) {
+        //Subtask subtask = subtaskHashMap.keySet();
+        //for (Integer integer : epicHashMap.keySet()) {
+            //Subtask subtask = (Subtask) subtaskHashMap.keySet();
+           // if (id == subtask.idEpic){
+                //subtaskHashMap.remove(integer);
+            //}
+        //}
         epicHashMap.remove(id);
     }
 
-    String printTask(int id) {
+    public String printTask(int id) {
         Task task = taskHashMap.get(id);
         return task.toString();
     }
 
-    String printSubtask(int id) {
+    public String printSubtask(int id) {
         Subtask subtask = subtaskHashMap.get(id);
         return subtask.toString();
     }
 
-    String printEpic(int id) {
+    public String printEpic(int id) {
         epicHashMap.remove(id);
         Epic epic = epicHashMap.get(id);
         return epic.toString();
     }
 
-    public void listTask() {
-        for (Integer integer: taskHashMap.keySet()) {
-            Task task = taskHashMap.get(integer);
-            System.out.println(task.toString());
-        }
-
+    public HashMap<Integer, Task> listTask() {
+        return taskHashMap;
     }
 
-    public void listSubtask() {
-        for (Integer integer: subtaskHashMap.keySet()) {
-            Subtask subtask = subtaskHashMap.get(integer);
-            System.out.println(subtask.toString());
-        }
-
+    public HashMap<Integer, Subtask> listSubtask() {
+        return subtaskHashMap;
     }
 
-    public void listEpic() {
-        for (Integer integer : epicHashMap.keySet()) {
-            Epic epic = epicHashMap.get(integer);
-            System.out.println(epic.toString());
-        }
+    public HashMap<Integer, Epic> listEpic() {
+        return epicHashMap;
     }
 
     public void listSubtaskForEpik(int idEpic) {
@@ -139,10 +140,10 @@ public class TaskManager {
         }
         String status = "DONE";
         for (Integer i : epicHashMap.keySet()) {
-            if (subtask.status == "NEW" && epic.status == "NEW") {
+            if (subtask.getStatus() == "NEW" && epic.getStatus() == "NEW") {
                 epic.setStatus("NEW");
                     status = "NEW";
-            } else if (subtask.status == "DONE" && status == "DONE") {
+            } else if (subtask.getStatus() == "DONE" && status == "DONE") {
                 epic.setStatus("DONE");
             } else {
                 epic.setStatus("IN_PROGRESS");
