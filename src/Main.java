@@ -1,6 +1,7 @@
-import Manager.TaskManager;
+import Tasks.Status;
 import Manager.InMemoryTaskManager;
 import Tasks.Epic;
+
 import Tasks.Subtask;
 import Tasks.Task;
 
@@ -11,12 +12,12 @@ public class Main {
         InMemoryTaskManager inMemoryTaskManager= new InMemoryTaskManager();
         inMemoryTaskManager.addEpic(new Epic("Собратся в поездку","Путешествие"));
         inMemoryTaskManager.addEpic(new Epic("Котовьи дела","Кот"));
-        inMemoryTaskManager.addSubtask(new Subtask("Собрать вещи", "Вещи", "NEW", 1));
-        inMemoryTaskManager.addSubtask(new Subtask("Купить продукты", "Продукты", "NEW", 1));
-        inMemoryTaskManager.addSubtask(new Subtask("Помыть кота", "Кот", "DONE", 2));
-        inMemoryTaskManager.addSubtask(new Subtask("Посушить кота", "Кот", "NEW", 3));
-        inMemoryTaskManager.addTask(new Task("Купить продукты на неделю", "Покупка продуктов", "NEW"));
-        inMemoryTaskManager.updateTask(new Task(6,"Купить продукты", "Покупка продуктов", "IN_PROGRESS"));
+        inMemoryTaskManager.addSubtask(new Subtask("Собрать вещи", "Вещи", Status.NEW, 1));
+        inMemoryTaskManager.addSubtask(new Subtask("Купить продукты", "Продукты", Status.NEW, 1));
+        inMemoryTaskManager.addSubtask(new Subtask("Помыть кота", "Кот", Status.DONE, 2));
+        inMemoryTaskManager.addSubtask(new Subtask("Посушить кота", "Кот", Status.NEW, 3));
+        inMemoryTaskManager.addTask(new Task("Купить продукты на неделю", "Покупка продуктов", Status.NEW));
+        inMemoryTaskManager.updateTask(new Task(6,"Купить продукты", "Покупка продуктов", Status.IN_PROGRESS));
         //System.out.println(inMemoryTaskManager.printTask(6));
         //System.out.println(inMemoryTaskManager.listSubtask());
         //inMemoryTaskManager.listSubtaskForEpik(1);

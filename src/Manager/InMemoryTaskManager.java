@@ -2,6 +2,7 @@ package Manager;
 
 
 import Tasks.Epic;
+import Tasks.Status;
 import Tasks.Subtask;
 import Tasks.Task;
 
@@ -52,7 +53,7 @@ public class InMemoryTaskManager implements TaskManager {
         ++nextId;
         ArrayList<Integer> epicStatus = epic.getSubtaskIds();
         if (epicStatus.isEmpty())
-            epic.setStatus("NEW");
+            epic.setStatus(Status.NEW);
         return epic.getId();
     }
 
@@ -173,18 +174,18 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicHashMap.get(subtask.idEpic);
         ArrayList<Integer> epicStatus = epic.getSubtaskIds();
         if (epicStatus.isEmpty()) {
-            epic.setStatus("NEW");
+            epic.setStatus(Status.NEW);
         }
-        String status = "DONE";
+        Status status = Status.DONE;
         for (Integer i : epicHashMap.keySet()) {
-            if (subtask.getStatus() == "NEW" && epic.getStatus() == "NEW") {
-                epic.setStatus("NEW");
-                status = "NEW";
-            } else if (subtask.getStatus() == "DONE" && status == "DONE") {
-                epic.setStatus("DONE");
+            if (subtask.getStatus() == Status.NEW && epic.getStatus() == Status.NEW) {
+                epic.setStatus(Status.NEW);
+                status = Status.NEW;
+            } else if (subtask.getStatus() == Status.DONE && status == Status.DONE) {
+                epic.setStatus(Status.DONE);
             } else {
-                epic.setStatus("IN_PROGRESS");
-                status = "IN_PROGRESS";
+                epic.setStatus(Status.IN_PROGRESS);
+                status = Status.IN_PROGRESS;
             }
         }
     }
