@@ -1,7 +1,8 @@
 package Manager;
 
-public class Manager {
-    void getDefault(){
+public class Manager<T> {
+    // Void  getDefault(){}
+        //return TaskManager;
 
-    }
+
 }

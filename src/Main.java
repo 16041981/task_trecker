@@ -1,3 +1,4 @@
+import Manager.InMemoryHistoryManager;
 import Tasks.Status;
 import Manager.InMemoryTaskManager;
 import Tasks.Epic;
@@ -9,6 +10,7 @@ import Tasks.Task;
 
 public class Main {
     public static void main(String[] args){
+        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
         InMemoryTaskManager inMemoryTaskManager= new InMemoryTaskManager();
         inMemoryTaskManager.addEpic(new Epic("Собратся в поездку","Путешествие"));
         inMemoryTaskManager.addEpic(new Epic("Котовьи дела","Кот"));
@@ -28,7 +30,7 @@ public class Main {
         inMemoryTaskManager.printSubtask(3);
         inMemoryTaskManager.printSubtask(4);
         System.out.println("history");
-        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(InMemoryHistoryManager.getHistory());
         inMemoryTaskManager.printSubtask(5);
         inMemoryTaskManager.printEpic(2);
         inMemoryTaskManager.printSubtask(3);
@@ -44,6 +46,6 @@ public class Main {
         inMemoryTaskManager.printSubtask(5);
         inMemoryTaskManager.printEpic(2);
         System.out.println("history");
-        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(InMemoryHistoryManager.getHistory());
     }
 }

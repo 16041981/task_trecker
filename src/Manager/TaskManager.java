@@ -1,6 +1,7 @@
 package Manager;
 
 
+import Tasks.Status;
 import Tasks.Epic;
 import Tasks.Subtask;
 import Tasks.Task;
@@ -51,5 +52,5 @@ public interface TaskManager {
 
     void updateStatusEpic(Subtask subtask);
 
-    String getHistory();
+    //String getHistory();
 }
