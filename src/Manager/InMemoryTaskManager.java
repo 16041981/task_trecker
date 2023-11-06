@@ -1,6 +1,4 @@
 package Manager;
-
-
 import Tasks.Epic;
 import Tasks.Status;
 import Tasks.Subtask;
@@ -13,9 +11,8 @@ public class InMemoryTaskManager implements TaskManager {
     public HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     public HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     public HashMap<Integer, Task> taskHashMap = new HashMap<>();
-
     InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-    //public List<Task> history = new ArrayList<>();
+
 
     int nextId = 1;
     int historyCount = 0;
@@ -125,21 +122,21 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public String printTask(int id) {
         Task task = taskHashMap.get(id);
-        InMemoryHistoryManager.history.add(task);
+        inMemoryHistoryManager.addHistory(task);
         return task.toString();
     }
 
     @Override
     public String printSubtask(int id) {
         Subtask subtask = subtaskHashMap.get(id);
-        InMemoryHistoryManager.history.add(subtask);
+        inMemoryHistoryManager.addHistory(subtask);
         return subtask.toString();
     }
 
     @Override
     public String printEpic(int id) {
         Epic epic = epicHashMap.get(id);
-        InMemoryHistoryManager.history.add(epic);
+        inMemoryHistoryManager.addHistory(epic);
         return epic.toString();
     }
 

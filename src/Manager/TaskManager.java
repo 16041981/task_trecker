@@ -1,13 +1,9 @@
 package Manager;
-
-
-import Tasks.Status;
 import Tasks.Epic;
 import Tasks.Subtask;
 import Tasks.Task;
-
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -52,5 +48,4 @@ public interface TaskManager {
 
     void updateStatusEpic(Subtask subtask);
 
-    //String getHistory();
 }

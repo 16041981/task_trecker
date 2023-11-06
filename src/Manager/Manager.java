@@ -1,8 +1,8 @@
 package Manager;
 
-public class Manager<T> {
-    // Void  getDefault(){}
-        //return TaskManager;
+public class Manager{
 
-
+    public static TaskManager getDefault() {
+        return new InMemoryTaskManager();
+    }
 }

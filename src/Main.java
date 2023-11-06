@@ -30,7 +30,7 @@ public class Main {
         inMemoryTaskManager.printSubtask(3);
         inMemoryTaskManager.printSubtask(4);
         System.out.println("history");
-        System.out.println(InMemoryHistoryManager.getHistory());
+        System.out.println(inMemoryHistoryManager.getHistory());
         inMemoryTaskManager.printSubtask(5);
         inMemoryTaskManager.printEpic(2);
         inMemoryTaskManager.printSubtask(3);
@@ -46,6 +46,6 @@ public class Main {
         inMemoryTaskManager.printSubtask(5);
         inMemoryTaskManager.printEpic(2);
         System.out.println("history");
-        System.out.println(InMemoryHistoryManager.getHistory());
+        System.out.println(inMemoryHistoryManager.getHistory());
     }
 }
