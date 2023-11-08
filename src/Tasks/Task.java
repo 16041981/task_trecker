@@ -4,13 +4,10 @@ import java.util.Objects;
 
 public  class Task {
 
-    Status status;
-
+    protected Status status;
     protected int id;
     protected String description;
     protected String name;
-
-    //protected String status;
 
     public Task(int id, String description, String name, Status status) {
         this.id = id;
@@ -76,7 +73,10 @@ public  class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(description, task.description) && Objects.equals(name, task.name) && Objects.equals(status, task.status);
+        return id == task.id &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(name, task.name) &&
+                Objects.equals(status, task.status);
     }
 
     @Override

@@ -4,10 +4,14 @@ import java.util.Objects;
 
 public class Subtask extends Task {
 
-    public int idEpic;
+    private int idEpic;
     public Subtask (String description, String name, Status status, int idEpic){
         super(description, name, status);
         this.idEpic = idEpic;
+    }
+
+    public int getIdEpic() {
+        return idEpic;
     }
 
     @Override
