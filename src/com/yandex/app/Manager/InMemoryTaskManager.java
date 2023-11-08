@@ -1,8 +1,8 @@
-package Manager;
-import Tasks.Epic;
-import Tasks.Status;
-import Tasks.Subtask;
-import Tasks.Task;
+package com.yandex.app.Manager;
+import com.yandex.app.Model.Epic;
+import com.yandex.app.Service.Status;
+import com.yandex.app.Model.Subtask;
+import com.yandex.app.Model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

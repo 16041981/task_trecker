@@ -1,10 +1,11 @@
-import Manager.Manager;
-import Tasks.Status;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
-import Manager.TaskManager;
-import Manager.HistoryManager;
+package com.yandex.app;
+import com.yandex.app.Manager.Manager;
+import com.yandex.app.Service.Status;
+import com.yandex.app.Model.Epic;
+import com.yandex.app.Model.Subtask;
+import com.yandex.app.Model.Task;
+import com.yandex.app.Manager.TaskManager;
+import com.yandex.app.Manager.HistoryManager;
 
 public class Main {
     public static void main(String[] args){
@@ -27,24 +28,23 @@ public class Main {
         manager.printTask(6);
         manager.printSubtask(3);
         manager.printSubtask(4);
-        System.out.println(historyManager.getHistory());
-        System.out.println("history");
-        manager.printSubtask(5);
-        manager.printEpic(2);
-        manager.printSubtask(3);
-        manager.printSubtask(4);
-        manager.printSubtask(5);
-        manager.printEpic(2);
-        manager.printSubtask(3);
-        manager.printSubtask(4);
-        manager.printSubtask(5);
-        manager.printEpic(2);
-        manager.printSubtask(3);
-        manager.printSubtask(4);
-        manager.printSubtask(5);
-        manager.printEpic(2);
         System.out.println("history");
         System.out.println(historyManager.getHistory());
-
+        manager.printSubtask(5);
+        manager.printEpic(2);
+        manager.printSubtask(3);
+        manager.printSubtask(4);
+        manager.printSubtask(5);
+        manager.printEpic(2);
+        manager.printSubtask(3);
+        manager.printSubtask(4);
+        manager.printSubtask(5);
+        manager.printEpic(2);
+        manager.printSubtask(3);
+        manager.printSubtask(4);
+        manager.printSubtask(5);
+        manager.printEpic(2);
+        System.out.println("history");
+        System.out.println(historyManager.getHistory());
     }
 }

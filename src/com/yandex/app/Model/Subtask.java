@@ -1,5 +1,5 @@
-package Tasks;
-
+package com.yandex.app.Model;
+import com.yandex.app.Service.Status;
 import java.util.Objects;
 
 public class Subtask extends Task {

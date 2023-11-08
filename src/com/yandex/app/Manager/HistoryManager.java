@@ -1,6 +1,6 @@
-package Manager;
+package com.yandex.app.Manager;
 
-import Tasks.Task;
+import com.yandex.app.Model.Task;
 
 import java.util.List;
 

@@ -1,9 +1,7 @@
-package Manager;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
-import java.util.HashMap;
-import java.util.List;
+package com.yandex.app.Manager;
+import com.yandex.app.Model.Epic;
+import com.yandex.app.Model.Subtask;
+import com.yandex.app.Model.Task;
 import java.util.Map;
 
 public interface TaskManager {

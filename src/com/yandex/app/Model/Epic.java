@@ -1,8 +1,7 @@
-package Tasks;
-
+package com.yandex.app.Model;
 import java.util.ArrayList;
 import java.util.Objects;
-
+import com.yandex.app.Service.Status;
 
 public class Epic extends Task {
 

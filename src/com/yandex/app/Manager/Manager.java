@@ -1,4 +1,4 @@
-package Manager;
+package com.yandex.app.Manager;
 
 public class Manager{
 
