@@ -1,50 +1,80 @@
 package com.yandex.app.Manager;
 import com.yandex.app.Model.Task;
-import com.yandex.app.Service.Node;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager{
+    private static class Node {
 
-    private static LinkedList<Task> getHistory = new LinkedList<>();
+        Task task;
+        public Node next;
+        public Node prev;
 
-    private static Map<Integer, Node> HashTable = new HashMap<>();
-
-    private int MAX_SIZE_LIST = 10;
-
-    @Override
-    public List<Task> getHistory() {
-        return List.copyOf(getHistory);
+        private Node(Task task, Node next, Node prev) {
+            this.task = task;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
+    private final static Map<Integer, Node> nodeMap = new HashMap<>();
+    private static Node first;
+    private static Node last;
+
+    //private int MAX_SIZE_LIST = 10;
+
+    private ArrayList<Task> getTasks(){
+        Node n = first;
+        ArrayList<Task>tasks = new ArrayList<>();
+        while (n != null){
+            tasks.add(n.task);
+            n = n.next;
+        }
+        return tasks;
+    }
+
+    public void linkLast(Task task){
+        final Node l = last;
+        final Node newNode = new Node(task, null, l);
+        last = newNode;
+        if (l == null) {
+            first = newNode;
+        } else {
+            l.next = newNode;
+        }
+        removeNode(task.getId());
+        nodeMap.put(task.getId(), newNode);
+    }
+
+    private void removeNode(int id){
+        nodeMap.remove(id);
+        Node node = nodeMap.remove(id);
+        if (node == null){
+            return;
+        }else if (node == first){
+            first = first.next;
+            first.prev = null;
+        }else if (node == last){
+            last = last.prev;
+            last.next = null;
+        }else{
+            node.prev = node.prev.prev;
+            node.next = node.next.next;
+        }
+    }
 
     @Override
     public void addHistory(Task task){
-        getHistory.add(task);
-        if (getHistory.size()>MAX_SIZE_LIST) {
-            getHistory.removeFirst();
-        }
+        linkLast(task);
     }
+
     @Override
     public void remove(int id){
-
+        //getHistory.remove(id);
     }
 
-    public void CustomLinkedList(Task task){
-        int size = 0;
-        Node node = new Node(task);
-         Node head = node;
-         Node tail = node;
-         node.next = new Node(task);
-         node.prev = tail;
-
-
-    }
-
-    public void removeNode(Node node){
-        HashTable.remove(node);
+    @Override
+    public List<Task> getHistory() {
+        return getTasks();
     }
 }

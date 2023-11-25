@@ -19,32 +19,22 @@ public class Main {
         manager.addSubtask(new Subtask("Посушить кота", "Кот", Status.NEW, 3));
         manager.addTask(new Task("Продукты", "Новая", Status.NEW));
         manager.updateTask(new Task(6,"Продукты", "В процессе", Status.IN_PROGRESS));
+        System.out.println(manager.printEpic(1));
+        System.out.println(manager.printEpic(2));
+        System.out.println(manager.printSubtask(3));
+        System.out.println(manager.printSubtask(4));
+        System.out.println(manager.printSubtask(5));
         System.out.println(manager.printTask(6));
+        System.out.println(manager.printEpic(1));
         System.out.println(manager.listSubtask());
         manager.listSubtaskForEpik(1);
         //manager.removeEpic(1);
         //manager.removeSubtask(5);
         //manager.cleanTask();
-        manager.printTask(6);
-        manager.printSubtask(3);
-        manager.printSubtask(4);
+//        manager.printTask(6);
+//        manager.printSubtask(3);
         System.out.println("history");
         System.out.println(historyManager.getHistory());
-        manager.printSubtask(5);
-        manager.printEpic(2);
-        manager.printSubtask(3);
-        manager.printSubtask(4);
-        manager.printSubtask(5);
-        manager.printEpic(2);
-        manager.printSubtask(3);
-        manager.printSubtask(4);
-        manager.printSubtask(5);
-        manager.printEpic(2);
-        manager.printSubtask(3);
-        manager.printSubtask(4);
-        manager.printSubtask(5);
-        manager.printEpic(2);
-        System.out.println("history");
-        System.out.println(historyManager.getHistory());
+
     }
 }
