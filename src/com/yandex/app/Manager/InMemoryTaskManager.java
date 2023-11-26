@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
+    InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
     private Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
     private Map<Integer, Epic> epicHashMap = new HashMap<>();
     private Map<Integer, Task> taskHashMap = new HashMap<>();
@@ -88,6 +89,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTask(int id) {
         taskHashMap.remove(id);
+        inMemoryHistoryManager.remove(id);
     }
 
     @Override
@@ -99,6 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
                 if (subtaskId.equals(id)) {
                     epic.removeSubtaskIds(epicIdSab);
                     subtaskHashMap.remove(id);
+                    inMemoryHistoryManager.remove(id);
                     break;
                 }
                 epicIdSab++;
@@ -112,9 +115,11 @@ public class InMemoryTaskManager implements TaskManager {
             Subtask subtask = subtaskHashMap.get(i);
             if (subtask != null && subtask.getIdEpic() == idEpic) {
                 subtaskHashMap.remove(i);
+                inMemoryHistoryManager.remove(i);
             }
         }
         epicHashMap.remove(idEpic);
+        inMemoryHistoryManager.remove(idEpic);
     }
 
     @Override
