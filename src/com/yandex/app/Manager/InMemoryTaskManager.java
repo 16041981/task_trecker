@@ -3,12 +3,12 @@ import com.yandex.app.Model.Epic;
 import com.yandex.app.Service.Status;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+    private final InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
     private Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
     private Map<Integer, Epic> epicHashMap = new HashMap<>();
     private Map<Integer, Task> taskHashMap = new HashMap<>();
@@ -49,7 +49,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(nextId);
         epicHashMap.put(epic.getId(), epic);
         ++nextId;
-        ArrayList<Integer> epicStatus = epic.getSubtaskIds();
+        List<Integer> epicStatus = epic.getSubtaskIds();
         if (epicStatus.isEmpty())
             epic.setStatus(Status.NEW);
         return epic.getId();
@@ -171,12 +171,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateStatusEpic(Subtask subtask) {
         Epic epic = epicHashMap.get(subtask.getIdEpic());
-        ArrayList<Integer> epicStatus = epic.getSubtaskIds();
+        List<Integer> epicStatus = epic.getSubtaskIds();
         if (epicStatus.isEmpty()) {
             epic.setStatus(Status.NEW);
         }
         Status status = Status.DONE;
-        for (Integer i : epicHashMap.keySet()) {
+        for (Integer ignored : epicHashMap.keySet()) {
             if (subtask.getStatus() == Status.NEW && epic.getStatus() == Status.NEW) {
                 epic.setStatus(Status.NEW);
                 status = Status.NEW;

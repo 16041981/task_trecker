@@ -1,5 +1,6 @@
 package com.yandex.app.Model;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import com.yandex.app.Service.Status;
 
@@ -23,7 +24,7 @@ public class Epic extends Task {
         subtaskIds.remove(id);
     }
 
-    public ArrayList<Integer>getSubtaskIds(){
+    public List<Integer> getSubtaskIds(){
         return subtaskIds;
     }
 

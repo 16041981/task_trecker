@@ -1,6 +1,6 @@
 package com.yandex.app.Manager;
 
-public class Manager{
+public final class Manager{
 
     private Manager() {
     }

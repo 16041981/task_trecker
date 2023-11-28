@@ -26,12 +26,9 @@ public class Main {
         System.out.println(manager.printTask(6));
         System.out.println(manager.printEpic(1));
         System.out.println(manager.listSubtask());
-        //manager.listSubtaskForEpik(1);
         System.out.println("history");
         System.out.println(historyManager.getHistory());
         manager.removeEpic(2);
-        //manager.removeSubtask(5);
-        //manager.cleanTask();
         System.out.println("history");
         System.out.println(historyManager.getHistory());
 
