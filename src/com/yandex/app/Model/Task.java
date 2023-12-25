@@ -1,5 +1,7 @@
 package com.yandex.app.Model;
 import com.yandex.app.Service.Status;
+import com.yandex.app.Service.TaskTupe;
+
 import java.util.Objects;
 
 public  class Task {
@@ -8,6 +10,16 @@ public  class Task {
     protected int id;
     protected String description;
     protected String name;
+    TaskTupe taskTupe = TaskTupe.TASK;
+    private int epicId = id;
+
+    public TaskTupe getType() {
+        return taskTupe;
+    }
+
+    public int getIdEpic() {
+        return epicId;
+    }
 
     public Task(int id, String description, String name, Status status) {
         this.id = id;

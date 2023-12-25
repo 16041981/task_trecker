@@ -3,13 +3,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import com.yandex.app.Service.Status;
+import com.yandex.app.Service.TaskTupe;
 
 public class Epic extends Task {
 
     public ArrayList<Integer> subtaskIds = new ArrayList<>();
 
+    TaskTupe taskTupe = TaskTupe.EPIC;
+
+    @Override
+    public TaskTupe getType() {
+        return taskTupe;
+    }
+
     public Epic(String description, String name) {
         super(description, name);
+    }
+
+    public Epic(int id, String description, String name, Status status) {
+        super(id, description, name, status);
     }
 
     public Epic(int id) {
@@ -26,6 +38,11 @@ public class Epic extends Task {
 
     public List<Integer> getSubtaskIds(){
         return subtaskIds;
+    }
+
+    public Epic(int id, String description, String name, Status status, ArrayList<Integer> subtaskIds) {
+        super(id, description, name, status);
+        this.subtaskIds = subtaskIds;
     }
 
     @Override

@@ -8,7 +8,6 @@ public final class Manager{
     }
 
     public static TaskManager getDefault() {
-        //return new InMemoryTaskManager();
         return new FileBackedTaskManager(new File("resources/task.csv"));
     }
 

@@ -1,11 +1,24 @@
 package com.yandex.app.Model;
 import com.yandex.app.Service.Status;
+import com.yandex.app.Service.TaskTupe;
+
 import java.util.Objects;
 
 public class Subtask extends Task {
 
+    TaskTupe taskTupe = TaskTupe.SUBTASK;
+    @Override
+    public TaskTupe getType() {
+        return taskTupe;
+    }
+
     private int idEpic;
-    public Subtask (String description, String name, Status status, int idEpic){
+    public Subtask (int id, String description, String name, Status status, int idEpic){
+        super(description, name, status);
+        this.idEpic = idEpic;
+    }
+
+    public Subtask(String description, String name, Status status, int idEpic) {
         super(description, name, status);
         this.idEpic = idEpic;
     }
