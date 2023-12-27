@@ -20,6 +20,10 @@ public class InMemoryTaskManager implements TaskManager {
     public InMemoryTaskManager() {
     }
 
+    public Task getTask (int i){
+        return taskHashMap.get(i);
+    }
+
     @Override
     public int addTask(Task task) {
         task.setId(nextId);
