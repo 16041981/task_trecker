@@ -9,6 +9,7 @@ import com.yandex.app.Service.Status;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,10 +36,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
         FileBackedTaskManager fileBackedTaskManager1 =FileBackedTaskManager.loadFromFile(new File("TaskHistury.csv"));
 
 
-
-    }
-
-    private void getTask (int i){
 
     }
 
@@ -74,7 +71,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
                 epic.addSubtaskIds(subtask.getId());
             }
             for (Integer taskId : history){
-                //taskManager.historyManager.add(taskManager.printTask(taskId));
                 taskManager.historyManager.addHistory(taskManager.getTask(taskId));
             }
         }catch (IOException e){
