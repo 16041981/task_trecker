@@ -97,4 +97,7 @@ public  class Task {
                 ", name=" + name + ", status=" + status +'\''+ '}';
     }
 
+    public int getIdEpic() {
+        return id;
+    }
 }
