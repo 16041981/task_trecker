@@ -6,7 +6,6 @@ public final class Manager{
 
     private Manager() {
     }
-
     public static TaskManager getDefault() {
         return new FileBackedTaskManager(new File("resources/task.csv"));
     }
