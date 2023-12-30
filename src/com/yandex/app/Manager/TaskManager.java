@@ -2,6 +2,8 @@ package com.yandex.app.Manager;
 import com.yandex.app.Model.Epic;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
+
+import java.util.List;
 import java.util.Map;
 
 public interface TaskManager {
@@ -21,7 +23,7 @@ public interface TaskManager {
 
     void cleanTask();
 
-    void cleanSubtask(Subtask subtask);
+    void cleanSubtask();
 
     void cleanEpic();
 
@@ -31,19 +33,19 @@ public interface TaskManager {
 
     void removeEpic(int idEpic);
 
-    Map<Integer, Task> printTask(int id);
+    Task getTask(int id);
 
-    Map<Integer, Subtask> printSubtask(int id);
+    Subtask getSubtask(int id);
 
-    Map<Integer, Epic> printEpic(int id);
+    Epic getEpic(int id);
 
-    Map<Integer, Task> listTask();
+    List<Task> listTask();
 
-    Map<Integer, Subtask> listSubtask();
+    List<Subtask> listSubtask();
 
-    Map<Integer, Epic> listEpic();
+    List<Epic> listEpic();
 
-    void listSubtaskForEpik(int idEpic);
+    List<Subtask> listSubtaskForEpik(int idEpic);
 
     void updateStatusEpic(Subtask subtask);
 

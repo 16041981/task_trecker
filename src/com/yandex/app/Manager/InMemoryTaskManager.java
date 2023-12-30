@@ -1,24 +1,22 @@
 package com.yandex.app.Manager;
 import com.yandex.app.Model.Epic;
-import com.yandex.app.Service.Status;
+import com.yandex.app.Model.Status;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryTaskManager implements TaskManager {
-    private final InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-    private Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
-    private Map<Integer, Epic> epicHashMap = new HashMap<>();
-    private Map<Integer, Task> taskHashMap = new HashMap<>();
+ public class InMemoryTaskManager implements TaskManager {
+
+    protected Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
+    protected Map<Integer, Epic> epicHashMap = new HashMap<>();
+    protected Map<Integer, Task> taskHashMap = new HashMap<>();
     private final HistoryManager historyManager = Manager.getDefaultHistory();
 
-
     private int nextId = 1;
-
-    public InMemoryTaskManager() {
-    }
 
     @Override
     public int addTask(Task task) {
@@ -32,7 +30,7 @@ public class InMemoryTaskManager implements TaskManager {
     public int addSubtask(Subtask subtask) {
         subtask.setId(nextId);
         Epic epic = epicHashMap.get(subtask.getIdEpic());
-        if (epic != null && epic.getId() == subtask.getIdEpic()) {
+        if (epic != null) {
             epic.addSubtaskIds(subtask.getId());
             subtaskHashMap.put(subtask.getId(), subtask);
             updateStatusEpic(subtask);
@@ -49,9 +47,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(nextId);
         epicHashMap.put(epic.getId(), epic);
         ++nextId;
-        List<Integer> epicStatus = epic.getSubtaskIds();
-        if (epicStatus.isEmpty())
-            epic.setStatus(Status.NEW);
+        epic.setStatus(Status.NEW);
         return epic.getId();
     }
 
@@ -67,105 +63,137 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        epicHashMap.put(epic.getId(), epic);
+        Epic oldEpic = epicHashMap.get(epic.getId());
+        oldEpic.setName(epic.getName());
+        oldEpic.setDescription(epic.getDescription());
     }
 
     @Override
     public void cleanTask() {
+        for (int i = 0; i < taskHashMap.size(); i++){
+            Task task = taskHashMap.get(i);
+            int q = task.getId();
+            historyManager.remove(q);
+        }
         taskHashMap.clear();
     }
 
     @Override
-    public void cleanSubtask(Subtask subtask) {
+    public void cleanSubtask() {
+        for (int i = 0; i < epicHashMap.size(); i++){
+            Epic epic = epicHashMap.get(i);
+            epic.getSubtaskIds().clear();
+        }
+        for (int i = 0; i < subtaskHashMap.size(); i++){
+            Subtask subtask = subtaskHashMap.get(i);
+            int q = subtask.getId();
+            historyManager.remove(q);
+            updateStatusEpic(subtask);
+        }
         subtaskHashMap.clear();
-        updateStatusEpic(subtask);
     }
 
     @Override
     public void cleanEpic() {
+        for (int i = 0; i < subtaskHashMap.size(); i++){
+            Subtask subtask1 = subtaskHashMap.get(i);
+            int q = subtask1.getId();
+            historyManager.remove(q);
+        }
+        for (int i = 0; i < epicHashMap.size(); i++){
+            Epic epic = epicHashMap.get(i);
+            int q = epic.getId();
+            historyManager.remove(q);
+        }
         epicHashMap.clear();
+        subtaskHashMap.clear();
     }
 
     @Override
     public void removeTask(int id) {
         taskHashMap.remove(id);
-        inMemoryHistoryManager.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
     public void removeSubtask(int id) {
-        for (Integer integer : epicHashMap.keySet()) {
             int epicIdSab = 0;
-            Epic epic = epicHashMap.get(integer);
-            for (Integer subtaskId : epic.subtaskIds) {
+            Epic epic = epicHashMap.get(id);
+            for (Integer subtaskId : epic.getSubtaskIds()) {
+                Subtask subtask= subtaskHashMap.get(subtaskId);
                 if (subtaskId.equals(id)) {
                     epic.removeSubtaskIds(epicIdSab);
                     subtaskHashMap.remove(id);
-                    inMemoryHistoryManager.remove(id);
+                    historyManager.remove(id);
                     break;
                 }
                 epicIdSab++;
-            }
+                updateStatusEpic(subtask);
         }
+
     }
 
     @Override
     public void removeEpic(int idEpic) {
-        for (int i = 1; i < 50; i++) {
-            Subtask subtask = subtaskHashMap.get(i);
+        Epic epic = epicHashMap.remove(idEpic);
+        for (Integer subtaskId : epic.getSubtaskIds()) {
+            Subtask subtask = subtaskHashMap.get(subtaskId);
             if (subtask != null && subtask.getIdEpic() == idEpic) {
-                subtaskHashMap.remove(i);
-                inMemoryHistoryManager.remove(i);
+                subtaskHashMap.remove(subtaskId);
+                historyManager.remove(subtaskId);
             }
         }
         epicHashMap.remove(idEpic);
-        inMemoryHistoryManager.remove(idEpic);
+        historyManager.remove(idEpic);
     }
 
     @Override
-    public Map<Integer, Task> printTask(int id) {
+    public Task getTask(int id) {
         Task task = taskHashMap.get(id);
         historyManager.addHistory(task);
-        return Map.copyOf(taskHashMap);
+        return task;
     }
 
     @Override
-    public Map<Integer, Subtask> printSubtask(int id) {
+    public Subtask getSubtask(int id) {
         Subtask subtask = subtaskHashMap.get(id);
         historyManager.addHistory(subtask);
-        return Map.copyOf(subtaskHashMap);
+        return subtask;
     }
 
     @Override
-    public Map<Integer, Epic> printEpic(int id) {
+    public Epic getEpic(int id) {
         Epic epic = epicHashMap.get(id);
         historyManager.addHistory(epic);
-        return Map.copyOf(epicHashMap);
+        return epic;
     }
 
     @Override
-    public Map<Integer, Task> listTask() {
-        return Map.copyOf(taskHashMap);
+    public List<Task> listTask() {
+        return new ArrayList<>(taskHashMap.values());
     }
 
     @Override
-    public Map<Integer, Subtask> listSubtask() {
-        return Map.copyOf(subtaskHashMap);
+    public List<Subtask> listSubtask() {
+        return new ArrayList<>(subtaskHashMap.values());
     }
 
     @Override
-    public Map<Integer, Epic> listEpic() {
-        return Map.copyOf(epicHashMap);
+    public List<Epic> listEpic() {
+        return new ArrayList<>(epicHashMap.values());
     }
 
     @Override
-    public void listSubtaskForEpik(int idEpic) {
-        for (Integer integer : subtaskHashMap.keySet()) {
+    public List<Subtask> listSubtaskForEpik(int idEpic) {
+        List <Subtask> list = new ArrayList<>();
+        Epic epic = epicHashMap.get(idEpic);
+        for (Integer integer : epic.getSubtaskIds()) {
             Subtask subtask = subtaskHashMap.get(integer);
             if (subtask.getIdEpic() == idEpic) {
-                System.out.println(subtask.toString());
+                list.add(subtask);
             }
         }
+        return list;
     }
 
     @Override
@@ -175,8 +203,15 @@ public class InMemoryTaskManager implements TaskManager {
         if (epicStatus.isEmpty()) {
             epic.setStatus(Status.NEW);
         }
+        for (Integer ignored : epic.getSubtaskIds()){
+            if (subtask.getStatus() == Status.DONE) {
+                epic.setStatus(Status.DONE);
+            } else {
+                break;
+            }
+        }
         Status status = Status.DONE;
-        for (Integer ignored : epicHashMap.keySet()) {
+        for (Integer ignored : epic.getSubtaskIds()) {
             if (subtask.getStatus() == Status.NEW && epic.getStatus() == Status.NEW) {
                 epic.setStatus(Status.NEW);
                 status = Status.NEW;

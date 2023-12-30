@@ -2,19 +2,18 @@ package com.yandex.app.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import com.yandex.app.Service.Status;
-import com.yandex.app.Service.TaskTupe;
 
 public class Epic extends Task {
 
-    public ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private List<Integer> subtaskIds = new ArrayList<>();
 
-    TaskTupe taskTupe = TaskTupe.EPIC;
+
 
     @Override
     public TaskTupe getType() {
-        return taskTupe;
+        return TaskTupe.EPIC;
     }
+
 
     public Epic(String description, String name) {
         super(description, name);

@@ -1,9 +1,10 @@
 package com.yandex.app.Manager;
 
+import com.yandex.app.Exception.ManagerSaveException;
 import com.yandex.app.Model.Epic;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
-import com.yandex.app.Service.Status;
+import com.yandex.app.Model.Status;
 
 
 import java.io.*;
@@ -38,10 +39,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
 
     }
 
-    private void getTask (int i){
-
-    }
-
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -68,7 +65,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
                 }
                 taskManager.addTask(task);
             }
-            for (Map.Entry<Integer, Subtask> e : taskManager.listSubtask().entrySet()) {
+            for (Map.Entry<Integer, Subtask> e : taskManager.subtaskHashMap.entrySet()) {
                 final Subtask subtask = e.getValue();
                 final Epic epic = taskManager.listEpic().get(subtask.getIdEpic());
                 epic.addSubtaskIds(subtask.getId());
@@ -90,17 +87,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
             bufferedWriter.write(CSVTaskFormat.getHeader());
             bufferedWriter.newLine();
 
-            for (Map.Entry<Integer, Task> entry : listTask().entrySet()){
+            for (Map.Entry<Integer, Task> entry : taskHashMap.entrySet()){
                 final Task task = entry.getValue();
                 bufferedWriter.write(CSVTaskFormat.toString(task));
                 bufferedWriter.newLine();
             }
-            for (Map.Entry<Integer, Subtask> entry : listSubtask().entrySet()){
+            for (Map.Entry<Integer, Subtask> entry : subtaskHashMap.entrySet()){
                 final Task task = entry.getValue();
                 bufferedWriter.write(CSVTaskFormat.toString(task));
                 bufferedWriter.newLine();
             }
-            for (Map.Entry<Integer, Epic> entry : listEpic().entrySet()){
+            for (Map.Entry<Integer, Epic> entry : epicHashMap.entrySet()){
                 final Task task = entry.getValue();
                 bufferedWriter.write(CSVTaskFormat.toString(task));
                 bufferedWriter.newLine();
@@ -164,9 +161,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
     }
 
     @Override
-    public void cleanSubtask(Subtask subtask) {
-        super.cleanSubtask(subtask);
-        historyManager.addHistory(subtask);
+    public void cleanSubtask() {
+        super.cleanSubtask();
         save();
     }
 
@@ -191,39 +187,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
     }
 
     @Override
-    public Map<Integer, Task> printTask(int id) {
-
-        return super.printTask(id);
+    public Task getTask(int id) {
+        return super.getTask(id);
     }
 
     @Override
-    public Map<Integer, Subtask> printSubtask(int id) {
-        return super.printSubtask(id);
+    public Subtask getSubtask(int id) {
+        return super.getSubtask(id);
     }
 
     @Override
-    public Map<Integer, Epic> printEpic(int id) {
-        return super.printEpic(id);
+    public Epic getEpic(int id) {
+        return super.getEpic(id);
     }
 
     @Override
-    public Map<Integer, Task> listTask() {
+    public List<Task> listTask() {
         return super.listTask();
     }
 
     @Override
-    public Map<Integer, Subtask> listSubtask() {
+    public List<Subtask> listSubtask() {
         return super.listSubtask();
     }
 
     @Override
-    public Map<Integer, Epic> listEpic() {
+    public List<Epic> listEpic() {
         return super.listEpic();
     }
 
     @Override
-    public void listSubtaskForEpik(int idEpic) {
-        super.listSubtaskForEpik(idEpic);
+    public List<Subtask> listSubtaskForEpik(int idEpic) {
+        return super.listSubtaskForEpik(idEpic);
     }
 
     @Override

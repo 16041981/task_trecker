@@ -1,11 +1,4 @@
 package com.yandex.app;
-import com.yandex.app.Manager.Manager;
-import com.yandex.app.Service.Status;
-import com.yandex.app.Model.Epic;
-import com.yandex.app.Model.Subtask;
-import com.yandex.app.Model.Task;
-import com.yandex.app.Manager.TaskManager;
-import com.yandex.app.Manager.HistoryManager;
 
 public class Main {
     public static void main(String[] args){

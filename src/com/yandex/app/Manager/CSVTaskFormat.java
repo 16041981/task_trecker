@@ -3,8 +3,8 @@ package com.yandex.app.Manager;
 import com.yandex.app.Model.Epic;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
-import com.yandex.app.Service.Status;
-import com.yandex.app.Service.TaskTupe;
+import com.yandex.app.Model.Status;
+import com.yandex.app.Model.TaskTupe;
 
 
 import java.util.ArrayList;
