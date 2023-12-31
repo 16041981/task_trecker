@@ -4,11 +4,6 @@ import java.util.Objects;
 
 public class Subtask extends Task {
 
-    @Override
-    public TaskTupe getType() {
-        return TaskTupe.SUBTASK;
-    }
-
     private final int idEpic;
     public Subtask (int id, String description, String name, Status status, int idEpic){
         super(id, description, name, status);
@@ -18,6 +13,11 @@ public class Subtask extends Task {
     public Subtask(String description, String name, Status status, int idEpic) {
         super(description, name, status);
         this.idEpic = idEpic;
+    }
+
+    @Override
+    public TaskTupe getType() {
+        return TaskTupe.SUBTASK;
     }
 
     public int getIdEpic() {

@@ -6,15 +6,19 @@ import com.yandex.app.Model.Task;
 import com.yandex.app.Model.Status;
 import com.yandex.app.Model.TaskTupe;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CSVTaskFormat {
 
     public static String toString(Task task) {
-        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() +
-                "," + task.getDescription() + "," + task.getIdEpic();
+        StringBuilder result = new StringBuilder().append(task.getId()).append(",")
+                .append(task.getType()).append(",").append(task.getName()).append(",")
+                .append(task.getStatus()).append(",").append(task.getDescription()).append(",");
+        if (task.getType() == TaskTupe.SUBTASK) {
+            result.append(((Subtask)(task)).getIdEpic());
+        }
+        return result.toString();
     }
 
     public static Task taskFromString(String value) {
@@ -35,11 +39,10 @@ public class CSVTaskFormat {
     }
 
      static String historyToString(HistoryManager manager){
-        final List<Task> history = manager.getHistory();
-        if (history.isEmpty()){
-            return "";
-        }
-
+         final List<Task> history = manager.getHistory();
+         if (history.isEmpty()){
+             return "";
+     }
         StringBuilder sb = new StringBuilder();
         sb.append(history.get(0).getId());
         for (int i = 1; i < history.size(); i++){
@@ -51,16 +54,21 @@ public class CSVTaskFormat {
     }
 
     public static List<Integer> historyFromString(String valye){
-        final String[] values = valye.split(",");
-        final ArrayList<Integer> ids = new ArrayList<>(values.length);
-        for (String id : values){
-            ids.add(Integer.parseInt(id));
+        if (valye != null) {
+            final String[] values = valye.split(",");
+            final ArrayList<Integer> ids = new ArrayList<>(values.length);
+            for (String id : values) {
+                ids.add(Integer.parseInt(id));
+            }
+            return ids;
+        }else {
+            List<Integer> nul = new ArrayList<>();
+            return nul;
         }
-        return ids;
     }
 
-        public static String getHeader(){
-            return "id,type,name,status,description,epic";
-        }
+    public static String getHeader(){
+        return "id,type,name,status,description,epic";
     }
+}
 

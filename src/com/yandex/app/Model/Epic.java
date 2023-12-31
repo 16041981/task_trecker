@@ -7,14 +7,6 @@ public class Epic extends Task {
 
     private List<Integer> subtaskIds = new ArrayList<>();
 
-
-
-    @Override
-    public TaskTupe getType() {
-        return TaskTupe.EPIC;
-    }
-
-
     public Epic(String description, String name) {
         super(description, name);
     }
@@ -42,6 +34,11 @@ public class Epic extends Task {
     public Epic(int id, String description, String name, Status status, ArrayList<Integer> subtaskIds) {
         super(id, description, name, status);
         this.subtaskIds = subtaskIds;
+    }
+
+    @Override
+    public TaskTupe getType() {
+        return TaskTupe.EPIC;
     }
 
     @Override

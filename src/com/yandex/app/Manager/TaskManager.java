@@ -47,6 +47,4 @@ public interface TaskManager {
 
     List<Subtask> listSubtaskForEpik(int idEpic);
 
-    void updateStatusEpic(Subtask subtask);
-
 }
