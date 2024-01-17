@@ -16,20 +16,6 @@ import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager{
 
-    public static void main(String[] args) {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(new File("TaskHistury.csv"));
-
-        fileBackedTaskManager.addEpic(new Epic( "Собратся в поездку","Путешествие"));
-        fileBackedTaskManager.addEpic(new Epic( "Котовьи дела","Кот"));
-        fileBackedTaskManager.addTask(new Task("Продукты", "Новая", Status.NEW));
-        fileBackedTaskManager.updateTask(new Task(3,"Продукты", "В процессе", Status.IN_PROGRESS));
-        fileBackedTaskManager.addSubtask(new Subtask( "Собрать вещи", "Вещи", Status.NEW, 1));
-        fileBackedTaskManager.addSubtask(new Subtask( "Купить продукты", "Продукты", Status.NEW, 1));
-        fileBackedTaskManager.addSubtask(new Subtask( "Помыть кота", "Кот", Status.DONE, 2));
-        fileBackedTaskManager.addSubtask(new Subtask( "Посушить кота", "Кот", Status.NEW, 2));
-
-    }
-
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -63,11 +49,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
             taskManager.nextId = generatorId + 1;
             for (Map.Entry<Integer, Subtask> e : taskManager.subtasks.entrySet()) {
                 final Subtask subtask = e.getValue();
-                final Epic epic = taskManager.listEpic().get(subtask.getIdEpic());
+                final Epic epic = taskManager.epics.get(subtask.getIdEpic());
                 epic.addSubtaskIds(subtask.getId());
             }
-            for (Integer taskId : history){
-                taskManager.historyManager.addHistory(taskManager.getTask(taskId));
+            for (Integer taskId : history) {
+                Task task;
+                if ((task = taskManager.tasks.get(taskId)) != null) {
+                    taskManager.historyManager.addHistory(task);
+                } else if ((task = taskManager.subtasks.get(taskId)) != null){
+                    taskManager.historyManager.addHistory(task);
+                } else if ((task = taskManager.epics.get(taskId)) != null){
+                    taskManager.historyManager.addHistory(task);
+                }//Аналогичные условия для подзадач/эпиков
+//            for (Integer taskId : history){
+//                taskManager.historyManager.addHistory(taskManager.getTask(taskId));
             }
         }catch (IOException e){
             throw new ManagerSaveException("Невозможно прочитать файл: " + file.getName(), e);
@@ -76,7 +71,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
         return taskManager;
     }
 
-    protected void save(){
+    public void save(){
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))){
 
             bufferedWriter.write(CSVTaskFormat.getHeader());

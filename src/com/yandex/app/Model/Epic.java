@@ -1,4 +1,6 @@
 package com.yandex.app.Model;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,12 +9,29 @@ public class Epic extends Task {
 
     private List<Integer> subtaskIds = new ArrayList<>();
 
+    private LocalDateTime endTime;
+
+
     public Epic(String description, String name) {
         super(description, name);
     }
 
     public Epic(int id, String description, String name, Status status) {
         super(id, description, name, status);
+    }
+
+
+    public Epic(String name, String description, LocalDateTime startTime) {
+        super(name, description, startTime);
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public Epic(int id) {
@@ -29,11 +48,6 @@ public class Epic extends Task {
 
     public List<Integer> getSubtaskIds(){
         return subtaskIds;
-    }
-
-    public Epic(int id, String description, String name, Status status, ArrayList<Integer> subtaskIds) {
-        super(id, description, name, status);
-        this.subtaskIds = subtaskIds;
     }
 
     @Override

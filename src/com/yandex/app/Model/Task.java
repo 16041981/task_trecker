@@ -1,16 +1,41 @@
 package com.yandex.app.Model;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public  class Task {
 
-    protected Status status;
     protected int id;
-    protected String description;
     protected String name;
+
+    protected Status status;
+    protected String description;
+    protected long duration;
+    protected LocalDateTime startTime;
+
+    public LocalDateTime getEndTime(){
+        LocalDateTime localDateTime = startTime.plusMinutes(duration);
+        return localDateTime;
+    }
 
     public TaskTupe getType() {
         return TaskTupe.TASK;
+    }
+
+    public Task(int id, String name, Status status, String description, long duration, LocalDateTime startTime) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public Task(String name, Status status, String description, LocalDateTime startTime) {
+        this.name = name;
+        this.status = status;
+        this.description = description;
+        this.startTime = startTime;
     }
 
     public Task(int id, String description, String name, Status status) {
@@ -32,10 +57,32 @@ public  class Task {
         this.status = Status.NEW;
     }
 
+    public Task(String name, String description, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+    }
+
     public Task(int id, String description, String name) {
         this.id = id;
         this.description = description;
         this.name = name;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public Task(int id) {

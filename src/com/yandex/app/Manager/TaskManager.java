@@ -45,6 +45,5 @@ public interface TaskManager {
 
     List<Epic> listEpic();
 
-    List<Subtask> listSubtaskForEpik(int idEpic);
-
+    List<Subtask> listSubtaskForEpic(int idEpic);
 }

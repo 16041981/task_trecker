@@ -1,10 +1,15 @@
 package com.yandex.app.Model;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
 
     private final int idEpic;
+
+
+
+
     public Subtask (int id, String description, String name, Status status, int idEpic){
         super(id, description, name, status);
         this.idEpic = idEpic;
@@ -12,6 +17,11 @@ public class Subtask extends Task {
 
     public Subtask(String description, String name, Status status, int idEpic) {
         super(description, name, status);
+        this.idEpic = idEpic;
+    }
+
+    public Subtask(String name, Status status, String description, LocalDateTime startTime, int idEpic) {
+        super(name, status, description, startTime);
         this.idEpic = idEpic;
     }
 

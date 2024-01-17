@@ -7,6 +7,7 @@ import com.yandex.app.Model.Status;
 import com.yandex.app.Model.TaskTupe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CSVTaskFormat {
@@ -62,8 +63,7 @@ public class CSVTaskFormat {
             }
             return ids;
         }else {
-            List<Integer> nul = new ArrayList<>();
-            return nul;
+            return Collections.emptyList();
         }
     }
 
