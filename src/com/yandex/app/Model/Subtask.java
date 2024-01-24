@@ -53,7 +53,7 @@ public class Subtask extends Task {
         return "Tasks.Subtask{" +
                 "id=" + '\''+id + '\'' + "idEpic=" + '\''+idEpic + '\'' +
                 ", description=" +'\''+ description + '\'' +
-                ", name=" + name + ", status=" + status +'\''+ '}';
+                ", name=" + name + ", status=" + status +'\''+  ", startTime=" + startTime +'\''+ '}';
     }
 
 

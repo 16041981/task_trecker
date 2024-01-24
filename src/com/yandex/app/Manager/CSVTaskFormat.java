@@ -6,6 +6,7 @@ import com.yandex.app.Model.Task;
 import com.yandex.app.Model.Status;
 import com.yandex.app.Model.TaskTupe;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +16,8 @@ public class CSVTaskFormat {
     public static String toString(Task task) {
         StringBuilder result = new StringBuilder().append(task.getId()).append(",")
                 .append(task.getType()).append(",").append(task.getName()).append(",")
-                .append(task.getStatus()).append(",").append(task.getDescription()).append(",");
+                .append(task.getStatus()).append(",").append(task.getDescription()).append(",")
+                .append(task.getStartTime()).append(task.getEndTime());
         if (task.getType() == TaskTupe.SUBTASK) {
             result.append(((Subtask)(task)).getIdEpic());
         }
@@ -29,14 +31,16 @@ public class CSVTaskFormat {
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
         final String description = values[4];
+        final LocalDateTime startTime = LocalDateTime.parse(values[5]);
+        final LocalDateTime endTime = LocalDateTime.parse(values [6]);
         if (tupe == TaskTupe.TASK) {
             return new Task(id, name, description, status);
         }
         if (tupe == TaskTupe.SUBTASK) {
-            final int epicId = Integer.parseInt(values[5]);
+            final int epicId = Integer.parseInt(values[7]);
             return new Subtask(id, name, description, status, epicId);
         }
-        return new Epic(id, name, description, status);
+        return new Epic(id, name, description, status, startTime, endTime);
     }
 
      static String historyToString(HistoryManager manager){
@@ -68,7 +72,7 @@ public class CSVTaskFormat {
     }
 
     public static String getHeader(){
-        return "id,type,name,status,description,epic";
+        return "id,type,name,status,description,startTime,endTime,epic";
     }
 }
 

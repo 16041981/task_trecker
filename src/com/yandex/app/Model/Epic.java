@@ -16,13 +16,19 @@ public class Epic extends Task {
         super(description, name);
     }
 
-    public Epic(int id, String description, String name, Status status) {
-        super(id, description, name, status);
+    public Epic(int id, String name, String description, Status status, LocalDateTime startTime, LocalDateTime endTime) {
+        super(id, name, status,description, startTime);
+        this.endTime = endTime;
     }
 
+    public Epic(int id, String name, String description, LocalDateTime startTime, LocalDateTime endTime) {
+        super(id, name,description, startTime);
+        this.endTime = endTime;
+    }
 
-    public Epic(String name, String description, LocalDateTime startTime) {
-        super(name, description, startTime);
+    public Epic(String name, String description, LocalDateTime startTime, LocalDateTime endTime) {
+        super( name, description, startTime);
+        this.endTime = endTime;
     }
 
     @Override
@@ -32,10 +38,6 @@ public class Epic extends Task {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    public Epic(int id) {
-        super(id);
     }
 
     public void addSubtaskIds (int id){
@@ -73,8 +75,7 @@ public class Epic extends Task {
         return "Tasks.Epic{" +
                 "id=" + '\''+ id + '\'' + "subtaskIds=" + '\''+ subtaskIds + '\'' +
                 ", description=" +'\''+ description + '\'' +
-                ", name=" + name + ", status=" + status +'\''+ '}';
+                ", name=" + name + ", status=" + status +'\''+ ", startTime=" + startTime +'\''+ ", endTime=" + endTime +'\''+ '}';
     }
 }
-
 

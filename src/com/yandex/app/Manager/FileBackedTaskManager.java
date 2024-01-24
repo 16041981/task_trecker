@@ -10,7 +10,6 @@ import com.yandex.app.Model.Status;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,9 +59,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
                     taskManager.historyManager.addHistory(task);
                 } else if ((task = taskManager.epics.get(taskId)) != null){
                     taskManager.historyManager.addHistory(task);
-                }//Аналогичные условия для подзадач/эпиков
-//            for (Integer taskId : history){
-//                taskManager.historyManager.addHistory(taskManager.getTask(taskId));
+                }
             }
         }catch (IOException e){
             throw new ManagerSaveException("Невозможно прочитать файл: " + file.getName(), e);

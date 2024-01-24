@@ -23,6 +23,44 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected Subtask subtask;
 
     @Test
+    void updateStatusEpic() {
+        epic = new Epic("epic description","epic");
+        final int epicId = taskManager.addEpic(epic);
+
+        assertEquals(NEW, epic.getStatus(), "Неверно определен стаус.");
+
+        subtask = new Subtask( "subtask description", "subtask", NEW, epicId);
+        final int subtaskId = taskManager.addSubtask(subtask);
+        Subtask subtask1 = new Subtask( "subtask description1", "subtask1", NEW, epicId);
+        final int subtaskId1 = taskManager.addSubtask(subtask1);
+        taskManager.updateEpic(epic);
+
+        assertEquals(NEW, epic.getStatus(), "Неверно определен стаус.");
+
+        taskManager.updateSubtask(
+                subtask = new Subtask(subtaskId,"subtask description", "subtask", IN_PROGRESS, epicId)
+        );
+        taskManager.updateEpic(epic);
+
+        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверно определен стаус.");
+
+        taskManager.updateSubtask(
+                subtask = new Subtask(subtaskId,"subtask description", "subtask", DONE, epicId)
+        );
+        taskManager.updateEpic(epic);
+
+        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверно определен стаус.");
+
+        taskManager.updateSubtask(
+                subtask1 = new Subtask( subtaskId1,"subtask description1", "subtask1", DONE, epicId)
+        );
+        taskManager.updateEpic(epic);
+
+        assertEquals(DONE, epic.getStatus(), "Неверно определен стаус.");
+
+    }
+
+    @Test
     void addTask() {
         task = new Task("Test addNewTask description", "Test addNewTask", NEW);
         final int taskId = taskManager.addTask(task);
@@ -49,7 +87,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         final Subtask savedSubtask = taskManager.getSubtask(subtaskId);
 
-        assertNotNull(savedSubtask, "Подзадачи не найдена.");
+        assertNotNull(savedSubtask, "Подзадачи не найдены.");
         assertEquals(subtask, savedSubtask, "Подзадачи не совпадают.");
 
         final List<Subtask> subtasks = taskManager.listSubtask();
@@ -128,36 +166,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         epic = new Epic("epic description","epic");
         final int epicId = taskManager.addEpic(epic);
 
-        assertEquals(NEW, epic.getStatus(), "Неверно определен стаус.");
-
         subtask = new Subtask( "subtask description", "subtask", NEW, epicId);
         final int subtaskId = taskManager.addSubtask(subtask);
         Subtask subtask1 = new Subtask( "subtask description1", "subtask1", NEW, epicId);
         final int subtaskId1 = taskManager.addSubtask(subtask1);
         taskManager.updateEpic(epic);
 
-        assertEquals(NEW, epic.getStatus(), "Неверно определен стаус.");
-
-        taskManager.updateSubtask(
-                subtask = new Subtask(subtaskId,"subtask description", "subtask", IN_PROGRESS, epicId)
-        );
-        taskManager.updateEpic(epic);
-
-        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверно определен стаус.");
-
-        taskManager.updateSubtask(
-                subtask = new Subtask(subtaskId,"subtask description", "subtask", DONE, epicId)
-        );
-        taskManager.updateEpic(epic);
-
-        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверно определен стаус.");
-
-        taskManager.updateSubtask(
-                subtask1 = new Subtask( subtaskId1,"subtask description1", "subtask1", DONE, epicId)
-        );
-        taskManager.updateEpic(epic);
-
-        assertEquals(DONE, epic.getStatus(), "Неверно определен стаус.");
 
         assertNotNull(epic, "Эпик не найден.");
         assertEquals(2, epic.getSubtaskIds().size(), "Неверное количество подзадач.");

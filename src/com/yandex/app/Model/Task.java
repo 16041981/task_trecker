@@ -22,14 +22,22 @@ public  class Task {
         return TaskTupe.TASK;
     }
 
-    public Task(int id, String name, Status status, String description, long duration, LocalDateTime startTime) {
+    public Task(int id, String name, Status status, String description, LocalDateTime startTime) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.description = description;
-        this.duration = duration;
         this.startTime = startTime;
     }
+
+    public Task(int id, String name, String description, LocalDateTime startTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+    }
+
+
 
     public Task(String name, Status status, String description, LocalDateTime startTime) {
         this.name = name;
@@ -37,6 +45,8 @@ public  class Task {
         this.description = description;
         this.startTime = startTime;
     }
+
+
 
     public Task(int id, String description, String name, Status status) {
         this.id = id;
