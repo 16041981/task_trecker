@@ -3,6 +3,7 @@ import com.yandex.app.Model.Epic;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -46,4 +47,6 @@ public interface TaskManager {
     List<Epic> listEpic();
 
     List<Subtask> listSubtaskForEpic(int idEpic);
+
+    Map<LocalDateTime, Task> getPrioritizedTasks();
 }

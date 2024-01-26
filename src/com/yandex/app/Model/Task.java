@@ -11,9 +11,12 @@ public  class Task {
     protected Status status;
     protected String description;
     protected long duration;
-    protected LocalDateTime startTime;
+    protected LocalDateTime startTime ;
 
     public LocalDateTime getEndTime(){
+        if (startTime == null){
+            return null;
+        }
         LocalDateTime localDateTime = startTime.plusMinutes(duration);
         return localDateTime;
     }
@@ -131,19 +134,18 @@ public  class Task {
         this.status = status;
     }
 
-    @Override  public boolean equals(Object o) {
+
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id &&
-                Objects.equals(description, task.description) &&
-                Objects.equals(name, task.name) &&
-                Objects.equals(status, task.status);
+        return id == task.id && duration == task.duration && Objects.equals(name, task.name) && status == task.status && Objects.equals(description, task.description) && Objects.equals(startTime, task.startTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, name, status);
+        return Objects.hash(id, name, status, description, duration, startTime);
     }
 
     @Override
