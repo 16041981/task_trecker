@@ -65,14 +65,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
-        prioritisedTasksRemove(task);
+        prioritisedTasksRemove(tasks.get(task.getId()));
         tasks.put(task.getId(), task);
         checkIntersectionOfTime(task);
         prioritisedTasks.put(task.getEndTime(), task);
     }
 
     public void updateSubtask(Subtask subtask) {
-        prioritisedTasksRemove(subtask);
+        prioritisedTasksRemove(subtasks.get(subtask.getId()));
         subtasks.put(subtask.getId(), subtask);
         checkIntersectionOfTime(subtask);
         updateStatusEpic(subtask.getIdEpic());
@@ -116,6 +116,10 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(subtask.getId());
             prioritisedTasksRemove(subtask);
         }
+        for (Epic epic : epics.values()){
+            historyManager.remove(epic.getId());
+            prioritisedTasksRemove(epic);
+        }
         epics.clear();
         subtasks.clear();
     }
@@ -130,9 +134,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeSubtask(int id) {
-        Subtask subtask1 = subtasks.get(id);
-        prioritisedTasksRemove(subtask1);
         Subtask subtask = subtasks.remove(id);
+        prioritisedTasksRemove(subtask);
         Epic epic = epics.get(subtask.getIdEpic());
         updateTimeEpic(epic.getId());
         epic.getSubtaskIds().remove((Integer) id);
@@ -145,9 +148,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpic(int idEpic) {
         Epic epic = epics.remove(idEpic);
         for (Integer subtaskId : epic.getSubtaskIds()) {
-            Subtask subtask = subtasks.get(subtaskId);
-            prioritisedTasks.remove(subtask.getEndTime());
-            subtasks.remove(subtaskId);
+            Subtask subtask = subtasks.remove(subtaskId);
+            prioritisedTasksRemove(subtask);
             historyManager.remove(subtaskId);
         }
         historyManager.remove(idEpic);
@@ -227,29 +229,27 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected void updateTimeEpic(int epicId){
         Epic epic = epics.get(epicId);
-        if(subtasks.isEmpty()){
-            epic.setStartTime(null);
-            epic.setEndTime(null);
-            epic.setDuration(0);
-        }else{
-            long dur = 0;
-            LocalDateTime localDateTime = LocalDateTime.of(1,1,1,1,1);
-            for (Integer subtaskId : epic.getSubtaskIds()) {
-                Subtask subtask = subtasks.get(subtaskId);
-                if (subtask.getIdEpic() == epicId
-                        && subtask.getStartTime().isAfter(epic.getStartTime())
-                        && localDateTime.isBefore(epic.getStartTime().minusNanos(1))
-                        && subtask.getEndTime() != null) {
-                    localDateTime = subtask.getStartTime();
-                    epic.setStartTime(subtask.getStartTime());
-                }else if(subtask.getIdEpic() == epicId
-                        && subtask.getEndTime().isAfter(epic.getEndTime())
-                        && subtask.getEndTime() != null) {
-                    epic.setEndTime(subtask.getStartTime());
-                    dur = subtask.getDuration() + dur;
-                }
+        long duration = 0;
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+        for (Integer subtaskId : epic.getSubtaskIds()) {
+            Subtask subtask = subtasks.get(subtaskId);
+            LocalDateTime startTimeSubtask = subtask.getStartTime();
+            LocalDateTime endTimeSubtask = subtask.getEndTime();
+            if (startTimeSubtask == null) {
+                continue;
             }
+            if (start == null || start.isAfter(startTimeSubtask)) {
+                start = startTimeSubtask;
+            }
+            if (end == null || end.isBefore(endTimeSubtask)) {
+                end = endTimeSubtask;
+            }
+            duration += subtask.getDuration();
         }
+        epic.setDuration(duration);
+        epic.setStartTime(start);
+        epic.setEndTime(end);
     }
 
     protected void checkIntersectionOfTime(Task task){
@@ -262,8 +262,8 @@ public class InMemoryTaskManager implements TaskManager {
                 continue;
             if (!task1.getStartTime().isBefore(task.getEndTime()))
                 continue;
-            else
-                throw new ManagerSaveException("Пересечение задач " + task + " || " + task1);
+
+            throw new ManagerSaveException("Пересечение задач " + task + " || " + task1);
         }
     }
 
