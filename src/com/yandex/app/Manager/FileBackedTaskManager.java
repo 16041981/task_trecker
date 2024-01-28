@@ -4,7 +4,6 @@ import com.yandex.app.Exception.ManagerSaveException;
 import com.yandex.app.Model.Epic;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
-import com.yandex.app.Model.Status;
 
 
 import java.io.*;
@@ -42,12 +41,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
                 switch (task.getType()) {
                     case TASK -> {
                         taskManager.tasks.put(id, task);
-                        taskManager.prioritisedTasks.put(task.getEndTime(), task);
+                        taskManager.prioritisedTasks.put(task.getStartTime(), task);
                     }
                     case EPIC -> taskManager.epics.put(id, (Epic)task);
                     case SUBTASK -> {
                         taskManager.subtasks.put(id, (Subtask)task);
-                        taskManager.prioritisedTasks.put(task.getEndTime(), (Subtask)task);
+                        taskManager.prioritisedTasks.put(task.getStartTime(), task);
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.yandex.app.Manager;
 import com.sun.source.util.SourcePositions;
+import com.yandex.app.Exception.ManagerSaveException;
 import com.yandex.app.Model.Epic;
 import com.yandex.app.Model.Status;
 import com.yandex.app.Model.Subtask;
@@ -64,17 +65,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
+        prioritisedTasksRemove(task);
         tasks.put(task.getId(), task);
-        prioritisedTasksRemove(task.getId());
         checkIntersectionOfTime(task);
+        prioritisedTasks.put(task.getEndTime(), task);
     }
 
     public void updateSubtask(Subtask subtask) {
+        prioritisedTasksRemove(subtask);
         subtasks.put(subtask.getId(), subtask);
-        prioritisedTasksRemove(subtask.getId());
         checkIntersectionOfTime(subtask);
         updateStatusEpic(subtask.getIdEpic());
         updateTimeEpic(subtask.getIdEpic());
+        prioritisedTasks.put(subtask.getEndTime(), subtask);
     }
 
     @Override
@@ -88,7 +91,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void cleanTask() {
         for (Task task : tasks.values()) {
             historyManager.remove(task.getId());
-            prioritisedTasksRemove(task.getId());
+            prioritisedTasksRemove(task);
         }
         tasks.clear();
     }
@@ -102,19 +105,16 @@ public class InMemoryTaskManager implements TaskManager {
         }
         for (Subtask subtask : subtasks.values()) {
             historyManager.remove(subtask.getId());
-            prioritisedTasksRemove(subtask.getId());
+            prioritisedTasksRemove(subtask);
         }
         subtasks.clear();
     }
 
     @Override
     public void cleanEpic() {
-        for (Integer subtaskId : subtasks.keySet()){
-            historyManager.remove(subtaskId);
-        }
         for (Subtask subtask : subtasks.values()){
             historyManager.remove(subtask.getId());
-            prioritisedTasksRemove(subtask.getId());
+            prioritisedTasksRemove(subtask);
         }
         epics.clear();
         subtasks.clear();
@@ -122,14 +122,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeTask(int id) {
-        prioritisedTasksRemove(id);
+        Task task = tasks.get(id);
+        prioritisedTasksRemove(task);
         tasks.remove(id);
         historyManager.remove(id);
     }
 
     @Override
     public void removeSubtask(int id) {
-        prioritisedTasksRemove(id);
+        Subtask subtask1 = subtasks.get(id);
+        prioritisedTasksRemove(subtask1);
         Subtask subtask = subtasks.remove(id);
         Epic epic = epics.get(subtask.getIdEpic());
         updateTimeEpic(epic.getId());
@@ -143,9 +145,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpic(int idEpic) {
         Epic epic = epics.remove(idEpic);
         for (Integer subtaskId : epic.getSubtaskIds()) {
+            Subtask subtask = subtasks.get(subtaskId);
+            prioritisedTasks.remove(subtask.getEndTime());
             subtasks.remove(subtaskId);
             historyManager.remove(subtaskId);
-            prioritisedTasksRemove(subtaskId);
         }
         historyManager.remove(idEpic);
     }
@@ -224,8 +227,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected void updateTimeEpic(int epicId){
         Epic epic = epics.get(epicId);
-        if(subtasks.size() == 0){
-            return;
+        if(subtasks.isEmpty()){
+            epic.setStartTime(null);
+            epic.setEndTime(null);
+            epic.setDuration(0);
         }else{
             long dur = 0;
             LocalDateTime localDateTime = LocalDateTime.of(1,1,1,1,1);
@@ -248,67 +253,32 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected void checkIntersectionOfTime(Task task){
-        for (LocalDateTime localDateTime : prioritisedTasks.keySet()) {
-            Task task1 = prioritisedTasks.get(localDateTime);
+        if (task.getStartTime() == null) {
+            return;
+        }
+        for (Map.Entry<LocalDateTime, Task> val : prioritisedTasks.entrySet()) {
+            Task task1 = val.getValue();
             if (!task1.getEndTime().isAfter(task.getStartTime()))
                 continue;
             if (!task1.getStartTime().isBefore(task.getEndTime()))
                 continue;
-            if (task.getId() == task1.getId())
-                continue;
-            if (task.getStartTime() == null || task1.getStartTime() == null)
-                continue;
             else
-                System.out.println("Задачи пересекаются!");
+                throw new ManagerSaveException("Пересечение задач " + task + " || " + task1);
         }
     }
 
-    void putPrioritizedTasks(Task task){
-        if (task.getEndTime() != null) {
+    private void putPrioritizedTasks(Task task){
+        if (task.getStartTime() != null) {
             prioritisedTasks.put(task.getStartTime(), task);
         }
-        LocalDateTime off = LocalDateTime.now();
-        for (LocalDateTime localDateTime : prioritisedTasks.keySet()) {
-            Task task1 = prioritisedTasks.get(localDateTime);
-            if (task.getEndTime().isAfter(task1.getEndTime()));
-            off = task1.getEndTime().plusNanos(1);
-        }
-        prioritisedTasks.put(off, task);
     }
 
-    void prioritisedTasksRemove(int id){
-        Iterator<Task> prioritisedTasks1 = prioritisedTasks.values().iterator();
-        while(prioritisedTasks1.hasNext()) {
-            Task task = prioritisedTasks1.next();
-            if (task.getId() == id){
-                prioritisedTasks1.remove();
-            }
-        }
-//        for (LocalDateTime localDateTime : prioritisedTasks.keySet()) {
-//            Task task = prioritisedTasks.get(localDateTime);
-//            if (task.getId() == id){
-//                prioritisedTasks.remove(localDateTime);
-//            }
-//        }
+
+    private void prioritisedTasksRemove(Task task) {
+        prioritisedTasks.remove(task.getStartTime());
     }
 
     public Map<LocalDateTime, Task> getPrioritizedTasks(){
         return new HashMap<>(prioritisedTasks);
     }
-
-//    public static void main(String[] args) throws InterruptedException {
-//        TaskManager taskManager = new InMemoryTaskManager();
-//
-//        taskManager.addEpic(new Epic( "1e","1ed", LocalDateTime.now(), LocalDateTime.now().plusSeconds(1)));
-//        Thread.sleep(2000);
-//        taskManager.addTask(new Task("1t","1td", LocalDateTime.now()));
-//        Thread.sleep(2000);
-//        taskManager.addSubtask(new Subtask("1s",NEW,"1sd", LocalDateTime.now(),1));
-//        Thread.sleep(2000);
-//        taskManager.addSubtask(new Subtask("2s",NEW,"2sd",LocalDateTime.now(),1));
-//        Thread.sleep(2000);
-//        taskManager.updateEpic(new Epic(1,"1e","1ed",LocalDateTime.now() ,LocalDateTime.now().plusSeconds(1)));
-
-
-   // }
 }

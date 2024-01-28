@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class CSVTaskFormat {
 
@@ -31,14 +32,14 @@ public class CSVTaskFormat {
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
         final String description = values[4];
-        if (values[5] == null){
-            final LocalDateTime startTime = null;
+        LocalDateTime startTime = null;
+        if (!Objects.equals(values[5], "null")){
+            startTime = LocalDateTime.parse(values[5]);
         }
-        final LocalDateTime startTime = LocalDateTime.parse(values[5]);
-        if (values[6] == null){
-            final LocalDateTime endTime = null;
+        LocalDateTime endTime = null;
+        if (!Objects.equals(values[6], "null")){
+            endTime = LocalDateTime.parse(values[6]);
         }
-        final LocalDateTime endTime = LocalDateTime.parse(values [6]);
         if (tupe == TaskTupe.TASK) {
             return new Task(id, name, status, description, startTime);
         }
