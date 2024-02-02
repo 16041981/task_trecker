@@ -1,9 +1,15 @@
 package com.yandex.app;
 
+import com.yandex.app.Manager.Manager;
+import com.yandex.app.Model.Epic;
+import com.yandex.app.Model.Subtask;
+import com.yandex.app.Model.Task;
+import com.yandex.app.Server.HttpTaskManager;
+
 public class Main {
     public static void main(String[] args){
-//        TaskManager manager = Manager.getDefault();
-//        HistoryManager historyManager = Manager.getDefaultHistory();
+//        HttpTaskManager manager = (HttpTaskManager) Manager.getDefault();
+//        HttpTaskManager historyManager = (HttpTaskManager) Manager.getDefaultHistory();
 //        manager.addEpic(new Epic("Собратся в поездку","Путешествие"));
 //        manager.addEpic(new Epic("Котовьи дела","Кот"));
 //        manager.addSubtask(new Subtask("Собрать вещи", "Вещи", Status.NEW, 1));

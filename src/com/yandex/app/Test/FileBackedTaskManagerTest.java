@@ -4,7 +4,6 @@ import com.yandex.app.Manager.FileBackedTaskManager;
 import com.yandex.app.Manager.HistoryManager;
 import com.yandex.app.Manager.Manager;
 import com.yandex.app.Model.Epic;
-import com.yandex.app.Model.Status;
 import com.yandex.app.Model.Subtask;
 import com.yandex.app.Model.Task;
 import org.junit.jupiter.api.AfterEach;
@@ -13,9 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static com.yandex.app.Model.Status.DONE;
 import static com.yandex.app.Model.Status.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

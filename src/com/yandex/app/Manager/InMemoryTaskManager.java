@@ -118,7 +118,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         for (Epic epic : epics.values()){
             historyManager.remove(epic.getId());
-            prioritisedTasksRemove(epic);
         }
         epics.clear();
         subtasks.clear();
