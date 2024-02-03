@@ -21,7 +21,6 @@ public class HttpTaskServer {
     private HttpServer server;
     private Gson gson;
     private final TaskManager taskManager;
-    private  HistoryManager historyManager;
 
     public HttpTaskServer() throws IOException{
         this(Manager.getDefault());
@@ -29,7 +28,6 @@ public class HttpTaskServer {
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.taskManager = taskManager;
-        this.historyManager = historyManager;
         gson = Manager.getGson();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks", this::handler);
@@ -53,7 +51,7 @@ public class HttpTaskServer {
                         System.out.println("/history ожидался GET запрос, получен "+ h.getRequestMethod());
                         h.sendResponseHeaders(405,0);
                     }
-                    final String response = gson.toJson(historyManager.getHistory());
+                    final String response = gson.toJson(taskManager.getHistory());
                     sendText(h, response);
                 }
                 case "task" -> handleTask(h);

@@ -38,12 +38,15 @@ public class HttpTaskManager extends FileBackedTaskManager {
             TaskTupe type = task.getType();
             if (type == TaskTupe.TASK){
                 this.tasks.put(id, task);
+                nextId++;
                 prioritisedTasks.put(task.getStartTime(), task);
             }else if (type == TaskTupe.SUBTASK){
                 subtasks.put(id, (Subtask) task);
+                nextId++;
                 prioritisedTasks.put(task.getStartTime(), task);
             }else if (type == TaskTupe.EPIC){
                 epics.put(id, (Epic) task);
+                nextId++;
             }
         }
     }
@@ -65,7 +68,7 @@ public class HttpTaskManager extends FileBackedTaskManager {
         }.getType());
 
          for (Integer taskId : history){
-             historyManager.addHistory(historyManager.getHistory().get(taskId));
+             historyManager.addHistory(history.);
          }
     }
 

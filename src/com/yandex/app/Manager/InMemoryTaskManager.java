@@ -280,4 +280,10 @@ public class InMemoryTaskManager implements TaskManager {
     public Map<LocalDateTime, Task> getPrioritizedTasks(){
         return new HashMap<>(prioritisedTasks);
     }
+
+    @Override
+    public List<Task> getHistory() {
+        List<Task> history = historyManager.getHistory();
+        return history;
+    }
 }
