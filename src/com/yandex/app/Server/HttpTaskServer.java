@@ -2,8 +2,8 @@ package com.yandex.app.Server;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import com.yandex.app.Manager.HistoryManager;
 import com.yandex.app.Manager.Manager;
 import com.yandex.app.Manager.TaskManager;
 import com.yandex.app.Model.Epic;
@@ -253,5 +253,14 @@ public class HttpTaskServer {
         h.sendResponseHeaders(200, resp.length);
         h.getResponseBody().write(resp);
     }
+
+    public void start(){
+        server.start();
+    }
+
+    public void stop(){
+        server.stop(0);
+    }
+
 }
 

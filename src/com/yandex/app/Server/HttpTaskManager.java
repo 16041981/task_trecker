@@ -68,7 +68,21 @@ public class HttpTaskManager extends FileBackedTaskManager {
         }.getType());
 
          for (Integer taskId : history){
-             historyManager.addHistory(history.);
+             for (Task task : tasks) {
+                 if (task.getId() == taskId){
+                     historyManager.addHistory(tasks.get(taskId));
+                 }
+             }
+             for (Subtask subtask : subtasks) {
+                 if (subtask.getId() == taskId) {
+                     historyManager.addHistory(subtasks.get(taskId));
+                 }
+             }
+             for (Epic epic : epics) {
+                 if (epic.getId() == taskId) {
+                     historyManager.addHistory(epics.get(taskId));
+                 }
+             }
          }
     }
 
