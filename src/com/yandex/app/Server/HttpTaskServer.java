@@ -2,7 +2,6 @@ package com.yandex.app.Server;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.yandex.app.Manager.Manager;
 import com.yandex.app.Manager.TaskManager;
@@ -18,8 +17,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpTaskServer {
     public static final int PORT = 8080;
-    private HttpServer server;
-    private Gson gson;
+    private final HttpServer server;
+    private final Gson gson;
     private final TaskManager taskManager;
 
     public HttpTaskServer() throws IOException{
@@ -30,7 +29,7 @@ public class HttpTaskServer {
         this.taskManager = taskManager;
         gson = Manager.getGson();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
-        server.createContext("/tasks", this::handler);
+        server.createContext("/register", this::handler);
     }
 
     private void handler(HttpExchange h) {
