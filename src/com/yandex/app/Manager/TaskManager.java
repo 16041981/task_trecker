@@ -51,4 +51,5 @@ public interface TaskManager {
     Map<LocalDateTime, Task> getPrioritizedTasks();
 
     List<Task> getHistory();
+
 }

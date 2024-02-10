@@ -117,8 +117,8 @@ public class HttpTaskServer {
                     return;
                 }
                 final Task task = gson.fromJson(json, Task.class);
-                final Integer id = task.getId();
-                if(id != null){
+                final int id = task.getId();
+                if(id != 0){
                     taskManager.updateTask(task);
                     System.out.println("Обновлена задача id " + id);
                     h.sendResponseHeaders(200,0);
@@ -171,8 +171,8 @@ public class HttpTaskServer {
                     return;
                 }
                 final Epic epic = gson.fromJson(json, Epic.class);
-                final Integer id = epic.getId();
-                if(id != null){
+                final int id = epic.getId();
+                if(id != 0){
                     taskManager.updateTask(epic);
                     System.out.println("Обновлена задача id " + id);
                     h.sendResponseHeaders(200,0);
@@ -225,8 +225,8 @@ public class HttpTaskServer {
                     return;
                 }
                 final Subtask subtask = gson.fromJson(json, Subtask.class);
-                final Integer id = subtask.getId();
-                if(id != null){
+                final int id = subtask.getId();
+                if(id != 0){
                     taskManager.updateTask(subtask);
                     System.out.println("Обновлена подзадача id " + id);
                     h.sendResponseHeaders(200,0);

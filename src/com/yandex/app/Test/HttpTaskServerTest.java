@@ -45,15 +45,9 @@ class HttpTaskServerTest {
 
     @BeforeEach
     void init() throws  IOException{
-        kvServer = new KVServer();
-        kvServer.start();
-        kvTaskClient = new KVTaskClient(8078);
-        taskManager = new HttpTaskManager(8078);
+        taskManager = new InMemoryTaskManager();
         taskServer = new  HttpTaskServer(taskManager);
         taskServer.start();
-        task = new Task("task", NEW, "description task", LocalDateTime.now());
-        taskManager.addTask(task);
-
     }
 
     @AfterEach
@@ -61,54 +55,177 @@ class HttpTaskServerTest {
         taskServer.stop();
     }
 
+
     @Test
-    void getTasks() throws IOException, InterruptedException {
+    void postTask() throws IOException, InterruptedException {
+        task = new Task(
+                "Test addNewTask",
+                NEW,
+                "Test addNewTask description",
+                LocalDateTime.now().plusNanos(1));
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/task");
-        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+        URI url = URI.create("http://localhost:8080/tasks/task/");
+        Gson gson = new Gson();
+        String json = gson.toJson(task);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Код ответа: " + response.statusCode());
         System.out.println("Тело ответа: " + response.body());
         assertEquals(200, response.statusCode());
 
-        final List<Task> tasks = gson.fromJson(response.body() , new TypeToken<ArrayList<Task>>() {
-        }.getType());
-
-        assertNotNull(tasks, "Где задачи?");
+        assertNotNull(taskManager.getTask(task.getId()), "Список задач пуст");
+        taskManager.cleanTask();
     }
 
     @Test
-    void putSingleTaskStandardBehavior() throws ManagerSaveException{
-        TaskManager manager = Manager.getDefault();
+    void postSubtask() throws IOException, InterruptedException {
+        epic = new Epic("epic description","epic");
+        epic.setStartTime(LocalDateTime.now().minusNanos(1));
+        epic.setEndTime(LocalDateTime.now().plusNanos(200));
+        taskManager.addEpic(epic);
+        final int epicId = epic.getId();
+        subtask = new Subtask(
+                3,
+                "subtask description",
+                NEW,
+                "subtask",
+                LocalDateTime.of(2024,01,01,01,03),
+                epicId
+        );
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/subtask");
+        Gson gson = new Gson();
+        String json = gson.toJson(subtask);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Код ответа: " + response.statusCode());
+        System.out.println("Тело ответа: " + response.body());
+        assertEquals(200, response.statusCode());
 
-        manager.cleanTask();
-        Task expectedTask = new Task("task", NEW, "description task", LocalDateTime.now());
-        manager.addTask(expectedTask);
-        Task actualTask = manager.getTask(expectedTask.getId());
-        assertEquals(expectedTask, actualTask);
+        assertNotNull(taskManager.getSubtask(subtask.getId()), "Список подзадач пуст");
+        taskManager.cleanEpic();
+        taskManager.cleanSubtask();
     }
-
-
-
 
     @Test
-    void addHistory() {
-        task = new Task(1, "","", Status.NEW);
-        historyManager.addHistory(task);
-        final List<Task> history = historyManager.getHistory();
-        assertNotNull(history, "История пустая.");
-        assertEquals(1, history.size(), "Неверное количество записей в истории.");
+    void postEpic() throws IOException, InterruptedException {
+        epic = new Epic("epic description","epic");
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/epic");
+        Gson gson = new Gson();
+        String json = gson.toJson(epic);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Код ответа: " + response.statusCode());
+        System.out.println("Тело ответа: " + response.body());
+        assertEquals(200, response.statusCode());
 
-        historyManager.addHistory(task);
-        historyManager.addHistory(task);
-        final List<Task> history2 = historyManager.getHistory();
-        assertEquals(1, history2.size(), "Запись в истории дублируется.");
-
-        historyManager.addHistory(task);
-        Task task1 = new Task(2, "","", Status.NEW);
-        historyManager.addHistory(task1);
-        final List<Task> history3 = historyManager.getHistory();
-        assertEquals(2, history3.size(), "Запись не добавилась.");
+        assertNotNull(taskManager.getEpic(epic.getId()), "Список эпиков пуст");
+        taskManager.cleanEpic();
     }
 
+    @Test
+    void postHistory() throws IOException, InterruptedException {
+        epic = new Epic("epic description","epic");
+        epic.setStartTime(LocalDateTime.now().minusNanos(1));
+        epic.setEndTime(LocalDateTime.now().plusNanos(200));
+        taskManager.addEpic(epic);
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/history");
+        Gson gson = new Gson();
+        String json = gson.toJson(epic);
+        final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Код ответа: " + response.statusCode());
+        System.out.println("Тело ответа: " + response.body());
+        assertEquals(200, response.statusCode());
+
+
+        assertNotNull(taskManager.getHistory(), "Список истории пуст");
+    }
+
+    @Test
+    void getTasks() throws IOException, InterruptedException {
+        epic = new Epic("epic description","epic");
+        epic.setStartTime(LocalDateTime.now().minusNanos(1));
+        epic.setEndTime(LocalDateTime.now().plusNanos(200));
+        taskManager.addEpic(epic);
+        final int epicId = epic.getId();
+
+        subtask = new Subtask(
+                2,
+                "subtask description",
+                NEW,
+                "subtask",
+                LocalDateTime.of(2024,01,01,01,02),
+                epicId
+        );
+        taskManager.addSubtask(subtask);
+
+        Subtask subtask1 = new Subtask(
+                3,
+                "subtask description",
+                NEW,
+                "subtask",
+                LocalDateTime.of(2024,01,01,01,03),
+                epicId
+        );
+        taskManager.addSubtask(subtask1);
+
+        task = new Task(
+                "Test addNewTask",
+                NEW,
+                "Test addNewTask description",
+                LocalDateTime.now().plusNanos(1));
+        taskManager.addTask(task);
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/task/");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Код ответа: " + response.statusCode());
+        System.out.println("Тело ответа: " + response.body());
+        assertEquals(200, response.statusCode());
+        taskManager.cleanTask();
+        taskManager.cleanSubtask();
+        taskManager.cleanEpic();
+    }
+
+    @Test
+    void getTaskId() throws IOException, InterruptedException {
+        task = new Task(
+                "Test addNewTask",
+                NEW,
+                "Test addNewTask description",
+                LocalDateTime.now().plusNanos(1));
+        taskManager.addTask(task);
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/task/?id=1");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+        taskManager.cleanTask();
+    }
+
+    @Test
+    void deleteTaskId() throws IOException, InterruptedException {
+        task = new Task(
+                "Test addNewTask",
+                NEW,
+                "Test addNewTask description",
+                LocalDateTime.now().plusNanos(1));
+        taskManager.addTask(task);
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/task/?id=1");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+
+        assertNull(taskManager.getTask(1), "Задача не удалена");
+    }
 }

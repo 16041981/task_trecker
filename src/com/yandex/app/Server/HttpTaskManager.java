@@ -36,17 +36,17 @@ public class HttpTaskManager extends FileBackedTaskManager {
         for(Task task : tasks) {
             final int id = task.getId();
             TaskTupe type = task.getType();
+            if (id > nextId) {
+                nextId = id +1;
+            }
             if (type == TaskTupe.TASK){
                 this.tasks.put(id, task);
-                nextId++;
                 prioritisedTasks.put(task.getStartTime(), task);
             }else if (type == TaskTupe.SUBTASK){
                 subtasks.put(id, (Subtask) task);
-                nextId++;
                 prioritisedTasks.put(task.getStartTime(), task);
             }else if (type == TaskTupe.EPIC){
                 epics.put(id, (Epic) task);
-                nextId++;
             }
         }
     }
@@ -68,20 +68,13 @@ public class HttpTaskManager extends FileBackedTaskManager {
         }.getType());
 
          for (Integer taskId : history){
-             for (Task task : tasks) {
-                 if (task.getId() == taskId){
-                     historyManager.addHistory(tasks.get(taskId));
-                 }
-             }
-             for (Subtask subtask : subtasks) {
-                 if (subtask.getId() == taskId) {
-                     historyManager.addHistory(subtasks.get(taskId));
-                 }
-             }
-             for (Epic epic : epics) {
-                 if (epic.getId() == taskId) {
-                     historyManager.addHistory(epics.get(taskId));
-                 }
+             Task task = tasks.get(taskId);
+             if (task != null){
+                 historyManager.addHistory(task);
+             }else if ((task = subtasks.get(taskId)) != null){
+                 historyManager.addHistory(task);
+             }else if ((task = epics.get(taskId)) != null){
+                 historyManager.addHistory(task);
              }
          }
     }
